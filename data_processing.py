@@ -108,6 +108,12 @@ class Table:
         For example, my_table.update_row('Film', 'A Serious Man', 'Year', '2022') will change the 'Year' attribute for the 'Film'
         'A Serious Man' from 2009 to 2022
         '''
+        file_name = f"{table.table_name}.csv"
+        with open(file_name, "w", newline='') as my_file:
+            writer = csv.writer(my_file)
+            writer.writerow(table.get_schema())
+            for dictionary in table.table:
+                writer.writerow(dictionary.values())
 
     def __str__(self):
         return self.table_name + ':' + str(self.table)
