@@ -97,6 +97,61 @@ class Table:
             pivot_table.append([item, aggregate_val_list])
         return pivot_table
 
+    def insert_row(self, dict):
+        '''
+        This method inserts a dictionary, dict, into a Table object, effectively adding a row to the Table.
+        '''
+
+    def update_row(self, primary_attribute, primary_attribute_value, update_attribute, update_value):
+        '''
+        This method updates the current value of update_attribute to update_value
+        For example, my_table.update_row('Film', 'A Serious Man', 'Year', '2022') will change the 'Year' attribute for the 'Film'
+        'A Serious Man' from 2009 to 2022
+        '''
+
     def __str__(self):
         return self.table_name + ':' + str(self.table)
+
+
+movies = []
+with open(os.path.join(__location__, 'movies.csv')) as f:
+    rows = csv.DictReader(f)
+    for r in rows:
+        movies.append(dict(r))
+
+table = Table('movies', movies)
+DB().insert(table)
+my_table = DB().search('movies')
+
+print(my_table)
+
+print("Find the average value of ‘Worldwide Gross’ for ‘Comedy’ movies")
+comedy = my_table.filter(lambda x: x['Genre'] == 'Comedy')
+value = []
+for item in comedy:
+    value.append(float(item['Worldwide Gross']))
+print(sum(value))
+print()
+
+print("Find the minimum ‘Audience score %’ for ‘Drama’ movies")
+drama = my_table.filter(lambda x: x['Genre'] == 'Drama')
+score = []
+for item in drama:
+    value.append(float(item['Audience score %']))
+print(min(value))
+print()
+
+print("Count the number of ‘Fantasy’ movie before invoking any of the above two methods")
+fantasy = [x for x in my_table if x['Genre'] == 'Fantasy']
+print(len(fantasy))
+
+dict = {}
+dict['Film'] = 'The Shape of Water'
+dict['Genre'] = 'Fantasy'
+dict['Lead Studio'] = 'Fox'
+dict['Audience score %'] = '72'
+dict['Profitability'] = '9.765'
+dict['Rotten Tomatoes %'] = '92'
+dict['Worldwide Gross'] = '195.3'
+dict['Year'] = '2017'
 
